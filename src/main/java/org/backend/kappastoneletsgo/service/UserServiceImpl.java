@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -32,8 +33,8 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public User findByUsername(String username) {
-        User user = userRepository.findByUserName(username);
+    public Optional<User> findByUsername(String username) {
+        Optional<User> user = userRepository.findByUserName(username);
         if (user == null) {
             throw new UserNotFoundException();
         }
@@ -48,13 +49,13 @@ public class UserServiceImpl implements UserService{
     @Override
     public User registerNewUserAccount(LoginFormDTO loginFormDTO) throws UserAlreadyExistException {
 
-        if (userExists(loginFormDTO.getUsername())) {
+        if (userExists(loginFormDTO.getUserName())) {
             throw new UserAlreadyExistException();
         }
 
 
         User newUser = new User();
-        newUser.setUsername(loginFormDTO.getUsername());
+        newUser.setUserName(loginFormDTO.getUserName());
         newUser.setPwHash(loginFormDTO.getPassword());
         newUser.setRole(Role.USER);
 

@@ -51,26 +51,26 @@ public class AuthenticationController {
 
     @GetMapping("/register")
     public String displayRegistrationForm(Model model) {
-        RegisterFormDTO userDTO = new RegisterFormDTO();
-        model.addAttribute("userDTO", userDTO);
+        model.addAttribute(new RegisterFormDTO());
         model.addAttribute("title", "Register");
         return "register";
     }
 
-    @PostMapping("/register/user")
+    @PostMapping("/register")
     public String processRegistrationForm(@ModelAttribute @Valid RegisterFormDTO registerFormDTO,
                                           Errors errors, HttpServletRequest request,
                                           Model model) {
 
         if (errors.hasErrors()) {
             model.addAttribute("title", "Register");
+            System.out.println("Error processing");
             return "register";
         }
 
-        User existingUser = userRepository.findByUserName(registerFormDTO.getUsername());
+        Optional<User> existingUser = userRepository.findByUserName(registerFormDTO.getUserName());
 
-        if (existingUser != null) {
-            errors.rejectValue("username", "username.alreadyexists", "A user with that username already exists");
+        if (existingUser.isPresent()) {
+            errors.rejectValue("userName", "userName.alreadyexists", "A user with that username already exists");
             model.addAttribute("title", "Register");
             return "register";
         }
@@ -83,7 +83,7 @@ public class AuthenticationController {
             return "register";
         }
 
-        User newUser = new User(registerFormDTO.getUsername(), registerFormDTO.getPassword());
+        User newUser = new User(registerFormDTO.getUserName(), registerFormDTO.getPassword());
         newUser.setRole(Role.USER);
         userRepository.save(newUser);
         setUserInSession(request.getSession(), newUser);
@@ -91,8 +91,8 @@ public class AuthenticationController {
         return "redirect:";
     }
 
-//    @PostMapping("/register/user")
-//    public ModelAndView registerUserAccount(@ModelAttribute("userDTO") @Valid LoginFormDTO loginFormDTO, HttpServletRequest request, Errors errors) {
+//    @PostMapping("/register")
+//    public ModelAndView registerUserAccount(@ModelAttribute @Valid LoginFormDTO loginFormDTO, HttpServletRequest request, Errors errors) {
 //
 //        UserServiceImpl userService = new UserServiceImpl();
 //
@@ -125,9 +125,9 @@ public class AuthenticationController {
             return "login";
         }
 
-        User theUser = userRepository.findByUserName(loginFormDTO.getUsername());
+        Optional<User> theUser = userRepository.findByUserName(loginFormDTO.getUserName());
 
-        if (theUser == null) {
+        if (theUser.isEmpty()) {
             errors.rejectValue("username", "user.invalid", "The given username does not exist");
             model.addAttribute("title", "Log In");
             return "login";
@@ -135,13 +135,13 @@ public class AuthenticationController {
 
         String password = loginFormDTO.getPassword();
 
-        if (!theUser.isMatchingPassword(password)) {
+        if (!theUser.get().isMatchingPassword(password)) {
             errors.rejectValue("password", "password.invalid", "Invalid password");
             model.addAttribute("title", "Log In");
             return "login";
         }
 
-        setUserInSession(request.getSession(), theUser);
+        setUserInSession(request.getSession(), theUser.get());
 
         return "redirect:";
     }

@@ -29,7 +29,7 @@ public class UserProfileServiceImpl implements UserProfileService {
 
     @Override
     public UserProfile findOne(String username) {
-        return findOne(userService.findByUsername(username).getId());
+        return findOne(userService.findByUsername(username).get().getId());
     }
 
 }

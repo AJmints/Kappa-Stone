@@ -5,22 +5,22 @@
 
 <nav th:replace="~{fragments-register :: navigation}"></nav>
 
-<form method="POST" th:object="${userDTO}" action="/register/user" enctype="multipart/form-data">
+<form method="post">
    <div class="form-group">
       <label>Username
-         <input class="form-control" th:field="*{username}" />
+         <input class="form-control" th:field="${registerFormDTO.userName}" />
       </label>
-      <p class="error" th:errors="*{username}"></p>
+      <p class="error" th:errors="${registerFormDTO.userName}"></p>
    </div>
    <div class="form-group">
       <label>Password
-         <input class="form-control" th:field="*{password}" type="password" />
+         <input class="form-control" th:field="${registerFormDTO.password}" type="password" />
       </label>
-      <p class="error" th:errors="${userDTO.password}"></p>
+      <p class="error" th:errors="${registerFormDTO.password}"></p>
    </div>
    <div class="form-group">
       <label>Verify Password
-         <input class="form-control" th:field="*{verifyPassword}" type="password" />
+         <input class="form-control" th:field="${registerFormDTO.verifyPassword}" type="password" />
       </label>
    </div>
 

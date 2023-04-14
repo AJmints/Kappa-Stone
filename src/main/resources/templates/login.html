@@ -7,10 +7,10 @@
 
 <form method="post">
    <div class="form-group">
-      <label th:for="username">Username
-         <input class="form-control" th:field="${loginFormDTO.username}">
+      <label th:for="userName">Username
+         <input class="form-control" th:field="${loginFormDTO.userName}">
       </label>
-      <p class="error" th:errors="${loginFormDTO.username}"></p>
+      <p class="error" th:errors="${loginFormDTO.userName}"></p>
    </div>
    <div class="form-group">
       <label>Password
