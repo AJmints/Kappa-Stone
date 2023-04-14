@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org/">
+<head th:replace="fragments :: head"></head>
+<body class="container">
+<h1 th:replace="~{fragments :: kappa-stone}"></h1>
+<nav th:replace="~{fragments :: navigation}"></nav>
+<div class="container">
+   <h2>View Users</h2>
+         <table>
+            <tr th:each="user : ${users}">
+               <a th:href="@{'/user/' + ${user.userName}}" th:text="${user.userName}">Onions</a>
+            </tr>
+         </table>
+</div>
+</body>
+</html>
