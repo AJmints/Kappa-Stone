@@ -12,7 +12,9 @@ public class User extends IdGenerator {
     private String userName;
 
     @NotNull
-    private String pwHash;
+    private String password;
+//    @NotNull
+//    private String pwHash;
 
     @NotNull
     private Role role = Role.UNDEFINED;
@@ -22,9 +24,15 @@ public class User extends IdGenerator {
     public User() {
     }
 
+//    public User(String userName, String password) {
+//        this.userName = userName;
+//        this.pwHash = encoder.encode(password);
+//    }
+
+
     public User(String userName, String password) {
         this.userName = userName;
-        this.pwHash = encoder.encode(password);
+        this.password = password;
     }
 
     public String getUserName() {
@@ -35,12 +43,21 @@ public class User extends IdGenerator {
         this.userName = userName;
     }
 
-    public String getPwHash() {
-        return pwHash;
+//    public String getPwHash() {
+//        return pwHash;
+//    }
+//
+//    public void setPwHash(String pwHash) {
+//        this.pwHash = pwHash;
+//    }
+
+
+    public String getPassword() {
+        return password;
     }
 
-    public void setPwHash(String pwHash) {
-        this.pwHash = pwHash;
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public Role getRole() {
@@ -51,8 +68,11 @@ public class User extends IdGenerator {
         this.role = role;
     }
 
-    public boolean isMatchingPassword(String password) {
-        return encoder.matches(password, pwHash);
-    }
+//    public boolean isMatchingPassword(String password) {
+//        return encoder.matches(password, pwHash);
+//    }
+public boolean isMatchingPassword(String password) {
+    return password.equals(this.password);
+}
 
 }

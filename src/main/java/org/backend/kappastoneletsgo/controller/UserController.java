@@ -9,10 +9,14 @@ import org.backend.kappastoneletsgo.service.UserProfileServiceImpl;
 import org.backend.kappastoneletsgo.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.Optional;
 
@@ -23,10 +27,8 @@ public class UserController {
     private UserService userService;
 
     @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
     private UserProfileServiceImpl userProfileService;
+
 
     @RequestMapping(value = "/user/{username}")
     public String findUserByUsernameAndViewProfilePage(@PathVariable String username,
@@ -46,15 +48,13 @@ public class UserController {
 
     @RequestMapping(value = "/users")
     public String listOfAllUser(Model model) {
-        model.addAttribute("users", userRepository.findAll());
+        model.addAttribute("users", userService.findAll());
         model.addAttribute("title", "User Profiles");
         return "user/users";
     }
 
-    @RequestMapping(value = "/myprofile")
-    public String myProfile(Authentication authentication,
-                            Model model) {
-//        Optional<User> existingUser = userRepository.findByUserName(registerFormDTO.getUserName());
+    @RequestMapping(value = "/myprofile", method = RequestMethod.GET)
+    public String myProfile(Authentication authentication, Model model) {
 
         String username = authentication.getName();
         UserProfile userProfile;

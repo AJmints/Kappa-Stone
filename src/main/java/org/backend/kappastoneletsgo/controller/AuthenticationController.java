@@ -67,9 +67,9 @@ public class AuthenticationController {
             return "register";
         }
 
-        Optional<User> existingUser = userRepository.findByUserName(registerFormDTO.getUserName());
+        User existingUser = userRepository.findByUserName(registerFormDTO.getUserName());
 
-        if (existingUser.isPresent()) {
+        if (existingUser != null) {
             errors.rejectValue("userName", "userName.alreadyexists", "A user with that username already exists");
             model.addAttribute("title", "Register");
             return "register";
@@ -125,9 +125,9 @@ public class AuthenticationController {
             return "login";
         }
 
-        Optional<User> theUser = userRepository.findByUserName(loginFormDTO.getUserName());
+        User theUser = userRepository.findByUserName(loginFormDTO.getUserName());
 
-        if (theUser.isEmpty()) {
+        if (theUser == null) {
             errors.rejectValue("username", "user.invalid", "The given username does not exist");
             model.addAttribute("title", "Log In");
             return "login";
@@ -135,13 +135,13 @@ public class AuthenticationController {
 
         String password = loginFormDTO.getPassword();
 
-        if (!theUser.get().isMatchingPassword(password)) {
+        if (!theUser.isMatchingPassword(password)) {
             errors.rejectValue("password", "password.invalid", "Invalid password");
             model.addAttribute("title", "Log In");
             return "login";
         }
 
-        setUserInSession(request.getSession(), theUser.get());
+        setUserInSession(request.getSession(), theUser);
 
         return "redirect:";
     }
